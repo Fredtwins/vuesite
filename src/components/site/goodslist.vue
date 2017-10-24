@@ -63,9 +63,14 @@
                                 </a>
                   </li>
                 </ul>
+                <!--轮播图  -->
                 <ol class="flex-control-nav flex-control-paging">
-                  <li><a class="">1</a></li>
-                  <li><a class="flex-active">2</a></li>
+                  <el-carousel :interval="5000" arrow="always">
+                    <el-carousel-item v-for="item in ginfo.sliderlist" :key="id">
+                      <img height="343" :src="item.img_url" alt="">
+                      <h3>{{ item.title }}</h3>
+                    </el-carousel-item>
+                  </el-carousel>
                 </ol>
               </div>
 
@@ -97,7 +102,7 @@
 
     <!--下半部分  -->
 
-   
+
 
     <div class="section">
 
@@ -229,25 +234,25 @@
   export default {
     data() {
       return {
-         // 定义一个对象 ginfo 用来存储接口：/site/goods/gettopdata/goods返回的message对象
-        ginfo:{},
-        clist:[]  // 用来存储接口site/goods/getgoodsgroup 中返回的messsage数据
+        // 定义一个对象 ginfo 用来存储接口：/site/goods/gettopdata/goods返回的message对象
+        ginfo: {},
+        clist: []  // 用来存储接口site/goods/getgoodsgroup 中返回的messsage数据
       }
     },
-    created(){
+    created() {
       this.getginfo();
     },
     methods: {
-      getginfo(){
-        this.$http.get('/site/goods/gettopdata/goods').then(res=>{
-          
-            this.ginfo=res.data.message;
-          
+      getginfo() {
+        this.$http.get('/site/goods/gettopdata/goods').then(res => {
+
+          this.ginfo = res.data.message;
+
         });
       },
-      getclist(){
-        this.$http.get('/site/goods/getgoodsgroup').then(res=>{
-          this.clist=res.data.message;
+      getclist() {
+        this.$http.get('/site/goods/getgoodsgroup').then(res => {
+          this.clist = res.data.message;
         })
       }
     }
