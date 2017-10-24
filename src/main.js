@@ -16,6 +16,8 @@ Vue.use(vueRouter);
 // 1.0.3 定义路由规则
 // 导入系统的整体布局组件
 import layout from './components/site/layout.vue';
+import goodslist from './components/site/goodslist.vue';
+import goodsinfo from './components/site/goodsinfo.vue';
 
 
 var router = new vueRouter({
@@ -23,7 +25,8 @@ var router = new vueRouter({
         {name:'default',path:'/',redirect:'/site'},
         {name:'layout',path:'/site',component:layout,
     children:[
-       
+       {name:'goodslist',path:'goodslist',component:goodslist},
+       {name:'goodsinfo',path:'goodsinfo/:goodsid',component:goodsinfo}
     ]
 }
     ]
