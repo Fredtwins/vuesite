@@ -66,22 +66,41 @@
         </div>
       </div>
     </div>
-<router-view></router-view>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
+  $(function () {
+    $("#menu2 li a").wrapInner('<span class="out"></span>');
+    $("#menu2 li a").each(function () {
+      $('<span class="over">' + $(this).text() + '</span>').appendTo(this);
+    });
+
+    $("#menu2 li a").hover(function () {
+      $(".out", this).stop().animate({ 'top': '48px' }, 300); // move down - hide
+      $(".over", this).stop().animate({ 'top': '0px' }, 300); // move down - show
+
+    }, function () {
+      $(".out", this).stop().animate({ 'top': '0px' }, 300); // move up - show
+      $(".over", this).stop().animate({ 'top': '-48px' }, 300); // move up - hide
+    });
+
+  });
   export default {
     data() {
       return {
       }
     },
     methods: {
-     
+
     }
   }
 
 </script>
 <style scoped>
+  /* 为了解决统一导入elemenui的样式,所以要放到layout.vue */
+  /* 导入样式的格式  @import url() */
 
+  @import url('../../../statics/elementuiCss/index.css');
 </style>
