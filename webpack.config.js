@@ -1,3 +1,4 @@
+
 var path = require('path');
 // 这个包的作用就是在内存中自动生成一个index.html页面
 var htmlwp = require("html-webpack-plugin");
@@ -59,6 +60,7 @@ module.exports={
                 test:/\.vue$/,
                 loader:['vue-loader']
             },
+            { test: /iview.src.*?js$/, loader: 'babel-loader' },
             // 如果使用的webpack1.0的话这个配置就会起作用
             {
                 // es6语法通常是写在 .js文件中

@@ -1,3 +1,4 @@
+
 // 步骤1：导入 vue这个包
 // var Vue = require('vue');
 import Vue from 'vue';
@@ -16,17 +17,21 @@ Vue.use(vueRouter);
 // 1.0.3 定义路由规则
 // 导入系统的整体布局组件
 import layout from './components/site/layout.vue';
+// 导入商品列表组件
 import goodslist from './components/site/goodslist.vue';
-import goodsinfo from './components/site/goodsinfo.vue';
 
+// 导入商品详情组件
+import goodsinfo from './components/site/goodsinfo.vue';
+import car from './components/site/car.vue';
 
 var router = new vueRouter({
     routes:[
         {name:'default',path:'/',redirect:'/site'},
         {name:'layout',path:'/site',component:layout,
     children:[
-       {name:'goodslist',path:'goodslist',component:goodslist},
-       {name:'goodsinfo',path:'goodsinfo/:goodsid',component:goodsinfo}
+       {name:'goodslist',path:'goodslist',component:goodslist}, //商品列表的路由规则
+       {name:'goodsinfo',path:'goodsinfo/:goodsid',component:goodsinfo},
+       {name:'car',path:'car',component:car},
     ]
 }
     ]
@@ -82,12 +87,67 @@ Vue.filter('datefmt',(input,fmtstring)=>{
 
 });
 
+
+// 定义vuex实现购物车数量的改变业务
+// 1.0 数据对象
+// 特点：当state的值一旦发生改变，那么通过 this.$store.state.buyCount 地方就会自动发生改变
+var state={
+    // 购物车中的购买数量
+    buyCount:0
+}
+
+// 2.0 action (购物车按钮点击的时候触发action,代码： this.$store.dispatch('changeBuyCount'),购买数量)
+var actions ={
+    changeBuyCount({commit},parmsBuyCount){
+        commit('changeBuyCount',parmsBuyCount);
+    }
+}
+
+// 3.0 mutations
+var mutations ={
+    changeBuyCount(state,parmsBuyCount){
+        state.buyCount += parmsBuyCount;
+    }
+}
+
+// 由于目前不需要对state中的buyCount进行逻辑封装，所以留空
+import {getItem} from './kits/localStorageKit.js'
+
+var getters = {
+    getCount(state){
+        // 如果想要在 组件的使用 this.$store.getters.getCount的地方能够state.buyCount的值的改变而自动刷新，
+        //就一定 要在这个方法中依赖state.buyCount，否则不会自动触发刷新
+         // 判断如果state中的buyCount的值>0
+            if(state.buyCount>0){
+                return state.buyCount
+            }
+            // 读取localStorage中的数据统计商品的种类个数返回
+            var goodsObj = getItem();
+            var count = 0;
+            for(var key in goodsObj){
+                count++;
+            }
+            state.buyCount = count;
+            return state.buyCount;
+    }   
+}
+
+import vuex from 'vuex';
+Vue.use(vuex);
+
+// 4.0 实例化一个Store对象
+var store = new vuex.Store({
+    state,actions,mutations,getters
+});
+
+
 new Vue({
     el:'#app',
     // 使用app这个组件对象
     // es5的写法
     // render:function(create){create(App);}
     router,   
+    store,  //注册
     // es6的写法 :将app当做根组件替换index1.html这个模板中的<div id="app">
     render:create=>create(App)
 });
