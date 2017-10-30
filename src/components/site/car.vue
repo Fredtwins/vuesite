@@ -41,7 +41,7 @@
                     <!--购物车头部-->
                     <!--商品列表-->
                     <div class="cart-box">
-                       {{values}}
+                        {{values}} 
                         <table width="100%" align="center" class="cart-table" border="0" cellspacing="0" cellpadding="8">
                             <tbody>
                                 <tr>
@@ -111,7 +111,9 @@
                     <div class="cart-foot clearfix">
                         <div class="right-box">
                             <button class="button" onclick="javascript:location.href='/index.html';">继续购物</button>
-                            <button class="submit" onclick="formSubmit(this, '/', '/shopping.html');">立即结算</button>
+                            <router-link to="/site/shopping">
+                            <button class="submit">立即结算</button>
+                            </router-link>
                         </div>
                     </div>
                     <!--购物车底部-->

@@ -55,3 +55,19 @@ delete goodsObj[goodsid];
 localStorage.setItem(key,JSON.stringify(goodsObj));
 
 }
+
+// 4.0 更新某个商品的购买数量
+export function updageItem(obj){
+/*
+     obj:{gid: ,count:}
+*/ 
+
+// 1.0 获取到所有的商品
+var goodsObj = getItem();
+
+// 2.0 修改gid对应的count
+goodsObj[obj.gid] = obj.count;
+
+// 3.0 重新写回
+localStorage.setItem(key,JSON.stringify(goodsObj));
+}

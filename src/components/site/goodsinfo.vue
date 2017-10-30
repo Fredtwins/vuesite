@@ -124,7 +124,7 @@
                                 <span v-html="ginfo.goodsinfo.content"></span>
                             </div>
 
-                            <div class="tab-content" v-if="!isContent">
+                            <div class="tab-content" v-if="!isContent"> 
                                 <!--网友评论-->
                                 <div class="comment-box">
                                     <!--取得评论总数-->

@@ -23,18 +23,64 @@ import goodslist from './components/site/goodslist.vue';
 // 导入商品详情组件
 import goodsinfo from './components/site/goodsinfo.vue';
 import car from './components/site/car.vue';
+import shopping from './components/site/shopping.vue';
+import login from './components/site/login.vue';
+import pay from './components/site/pay.vue';
+import paysuccess from './components/site/paysuccess.vue';
+import payamount from './components/site/payamount.vue';
+import vipcenter from './components/site/vipcenter.vue';
+import vipmyorderlist from './components/site/myorderlist.vue';
+import orderdetial from './components/site/orderdetial.vue';
 
 var router = new vueRouter({
     routes:[
         {name:'default',path:'/',redirect:'/site'},
+        {name:'payamount',path:'/site/payamount/:orderid/:amount',component:payamount}, 
+        {name:'paysuccess',path:'/site/paysuccess',component:paysuccess},
         {name:'layout',path:'/site',component:layout,
     children:[
+         {name:'login',path:'login',component:login},
        {name:'goodslist',path:'goodslist',component:goodslist}, //商品列表的路由规则
        {name:'goodsinfo',path:'goodsinfo/:goodsid',component:goodsinfo},
-       {name:'car',path:'car',component:car},
+       {name:'car',path:'car',component:car},  //购物车页面
+    //    meta:{islogin:true}：表示要进行登录检查,只有登录过的才能进入到shopping组件，否则要进入到登录页面
+       {name:'shopping',path:'shopping/:ids',component:shopping,meta:{islogin:true}},
+       {name:'pay',path:'pay/:orderid',component:pay,meta:{islogin:true}},
+       {name:'paysuccesspc',path:'paysuccesspc',component:paysuccess},
+       {name:'vipcenter',path:'vip/center',component:vipcenter,meta:{islogin:true}},
+       {name:'vipmyorderlist',path:'vip/myorderlist',component:vipmyorderlist,meta:{islogin:true}},
+       {name:'orderdetial',path:'vip/orderdetial/:orderid',component:orderdetial,meta:{islogin:true}}
+       
     ]
 }
     ]
+});
+
+// 利用router 的全局守卫钩子函数进行登录验证
+router.beforeEach((to,from,next)=>{
+    // 1.0 在localStorage中记录当前浏览器访问的的最后一个路由规则的名称
+    if(to.name !=="login"){
+        localStorage.setItem('currentRouteName',to.name);
+    }    
+
+    // 2.0 判断如果to.meta上有islogin的话，则要进行登录判断
+    if(to.meta.islogin){
+
+        // 1.0 请求验证api: /site/account/islogin
+        axios.get('/site/account/islogin').then(res=>{
+            if(res.data.code =="logined"){
+                // 登录过
+                next();
+            }else{
+                // 未登录过则跳转到登录页面
+                router.push({name:'login'});
+            }
+        });
+
+    }else{
+        // 表示不需要进行登录验证，直接访问即可
+        next();
+    }
 });
 
 // 2.0 axios的使用
@@ -42,6 +88,7 @@ var router = new vueRouter({
 import axios from 'axios';
 // 2.0.2 设定axios的基本的url请求前缀
 axios.defaults.baseURL = 'http://157.122.54.189:9095';
+// axios.defaults.baseURL = 'http://127.0.0.1:8899';
 
 // 2.0.3 想要在将来的每个子组件中的方法中均可以使用 this.$http去调用其方法执行ajax请求
 //就要将axios对象挂载到vue的原型属性$http上
